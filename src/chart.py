@@ -1,4 +1,5 @@
 
+from abc import ABC
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, TypeVar
 
@@ -31,11 +32,21 @@ def draw_chart(data: PriceData,
     return fig
 
 
+#######################
+# related additional plots
+# Used in mplfinance.make_addplot()
+#######################
+
 @dataclass  
-class PlotStyle:
+class PlotStyle(ABC):
     ylabel: str 
     type:str
     color:str
+
+    def __new__(cls, *args, **kwargs):
+        if cls is PlotStyle:
+            raise TypeError("PlotStyle class is abstract and cannot be instantiated directly.")
+        return super().__new__(cls)
 
 @dataclass
 class LineStyle(PlotStyle):

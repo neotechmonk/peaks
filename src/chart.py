@@ -32,10 +32,10 @@ def draw_chart(data: PriceData,
     return fig
 
 
-#######################
+###################################
 # related additional plots
 # Used in mplfinance.make_addplot()
-#######################
+###################################
 
 @dataclass  
 class PlotStyle(ABC):
@@ -74,4 +74,4 @@ AdditionalPlotInput = Callable[[PriceData, PlotStyle], Dict[str, Any]]
 
 def create_additional_plot(add_plot_input: AdditionalPlotInput) -> Any:
     data, plot_style = add_plot_input
-    return mpf.make_addplot(data, **plot_style.__dict__)
+    return mpf.make_addplot(data, **vars(plot_style))

@@ -38,8 +38,9 @@ def with_logging(level):
 
 #########################
 # CUSTOM CACHING WITH TTL IN SECONDS #
+# SOURCE : https://stackoverflow.com/questions/31771286/python-in-memory-cache-with-time-to-live
 #########################
-def time_cache(max_age, maxsize=128, typed=False):
+def cache_time(max_age, maxsize=128, typed=False):
     """Least-recently-used cache decorator with time-based cache invalidation.
 
     Args:

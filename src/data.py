@@ -4,7 +4,7 @@ from functools import cache, partial
 import pandas as pd
 import yfinance as yf
 
-from utils import time_cache
+from utils import cache_time
 
 
 def get_price(ticker : str, start_date : str, end_date : str, interval :str)->pd.DataFrame:
@@ -26,7 +26,7 @@ def get_price(ticker : str, start_date : str, end_date : str, interval :str)->pd
 
 
 # Cached verion of `get_price` 
-@time_cache(600) #TTL in seconds
+@cache_time(600) #TTL in seconds
 def get_cached_price(fn = get_price, *arg, **kwargs):
     return fn(*arg, **kwargs)
 

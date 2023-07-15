@@ -2,9 +2,9 @@
 
 import numpy as np
 
+import lib.peaks as peaks
 from chart import PLOT_STYLE, additional_plot_factory, draw_chart
 from data import sample_6M_daily_price
-from lib.peaks import scipy_signal_find_peaks_cwt
 
 
 def draw_peaks(ticker: str, peak_finder_fn, *peak_finder_fn_args, **peak_finder_fn_kwargs):
@@ -31,8 +31,8 @@ def draw_peaks(ticker: str, peak_finder_fn, *peak_finder_fn_args, **peak_finder_
 
 
 def main(ticker):
-    draw_peaks(ticker=ticker, peak_finder_fn=scipy_signal_find_peaks_cwt, widths=np.arange(1,4), max_distances=np.arange(1,4))
-    draw_peaks(ticker=ticker, peak_finder_fn=scipy_signal_find_peaks_cwt, widths=np.arange(1,4), max_distances=np.arange(1,4))
+    draw_peaks(ticker=ticker, peak_finder_fn=peaks.scipy_signal_find_peaks_cwt, widths=np.arange(1,4), max_distances=np.arange(1,4))
+    # draw_peaks(ticker=ticker, peak_finder_fn=peaks.scipy_signal_argrelextrema, comparator = np.greater)
    
 
 if __name__ =="__main__":

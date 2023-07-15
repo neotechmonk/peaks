@@ -21,12 +21,9 @@ def draw_peaks(ticker: str, peak_finder_fn, *peak_finder_fn_args, **peak_finder_
     fig.show()
 
 
-def main():
-    ticker= 'MSFT'
-
+def main(ticker):
     draw_peaks(ticker=ticker, peak_finder_fn=scipy_signal_find_peaks_cwt, widths=np.arange(1,4), max_distances=np.arange(1,4))
     
 
 if __name__ =="__main__":
-    # main_single()
-    main()
+    main("MSFT")

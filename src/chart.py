@@ -7,31 +7,6 @@ import mplfinance as mpf
 import numpy as np
 import pandas as pd
 
-PriceData = TypeVar('PriceData', np.ndarray, List, pd.DataFrame)
-
-
-def draw_chart(data: PriceData, 
-               addplots: List[Dict[str, Any]] = None, 
-               plot_settings: Dict[str, Any] = None, 
-               returnfig = False) -> Any:
-    """
-    Function to draw a chart with optional inputs
-        - additional plots (as a list of dictionaries)
-        - plot_settings
-
-    Params: 
-        @returnfig = returns the fig instead of plotting/showing the chart 
-    """
-    plot_params = plot_settings.copy() if plot_settings else {}
-
-    if addplots is not None:
-        plot_params["addplot"] = addplots
-
-    fig,_ = mpf.plot(data=data, **plot_params,returnfig=returnfig)
-    
-    return fig
-
-
 ###################################
 # related additional plots
 # Used in mplfinance.make_addplot()
@@ -39,13 +14,14 @@ def draw_chart(data: PriceData,
 
 @dataclass  
 class PlotStyle(ABC):
+    """All attributes are match the dict() paramaters of mplfinance.make_addplot()"""
     ylabel: str 
     type:str
     color:str
 
     def __new__(cls, *args, **kwargs):
         if cls is PlotStyle:
-            raise TypeError("PlotStyle class is abstract and cannot be instantiated directly.")
+            raise TypeError(f"{cls.__name__} class is abstract - cannot instantiate")
         return super().__new__(cls)
 
 @dataclass
@@ -68,10 +44,37 @@ class UpMarkerStyle(PlotStyle):
     marker: str =  '^'
     markersize : int = 50 
 
+###################################
+# Chart with additional plots
+###################################
 
 
-AdditionalPlotInput = Callable[[PriceData, PlotStyle], Dict[str, Any]]
+#Permitted data types of price feed
+PriceData = TypeVar('PriceData', np.ndarray, List, pd.DataFrame)
 
-def create_additional_plot(add_plot_input: AdditionalPlotInput) -> Any:
+#structural type addtioan plot creation function
+AdditionalPlotCreator = Callable[[PriceData, PlotStyle], Dict[str, Any]]
+def create_additional_plot(add_plot_input: AdditionalPlotCreator) -> Dict[str, Any]:
     data, plot_style = add_plot_input
     return mpf.make_addplot(data, **plot_style.__dict__)
+
+
+def draw_chart(data: PriceData, 
+               addplots: List[AdditionalPlotCreator] = None, 
+               plot_settings: Dict[str, Any] = {}, 
+               returnfig = False) -> Any:
+    """
+    Function to draw a chart with optional inputs
+        - additional plots (as a list of dictionaries)
+        - plot_settings
+
+    Params: 
+        @returnfig = returns the fig instead of plotting/showing the chart 
+    """
+
+    fig,_ = mpf.plot(data=data, addplot = addplots, **plot_settings,returnfig=returnfig)
+    
+    return fig
+
+## Factory method to create draw charts with additional plots
+# def draw_chart_with_additional_plots(data:

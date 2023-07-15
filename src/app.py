@@ -1,7 +1,6 @@
 from functools import cache
 
-from chart import additional_plot_factory as addplot_factory
-from chart import draw_chart
+from chart import PLOT_STYLE, additional_plot_factory, draw_chart
 from data import sample_6M_daily_price
 
 
@@ -11,7 +10,7 @@ def main_single():
 
     add_plots=[]
     add_plots.append(additional_plot_factory(additional_plot_data=add_plotdata,
-                                             additional_plot_style='line',
+                                             additional_plot_style=PLOT_STYLE.LINE,
                                              label="Double Close"))
     # line_style = PlotStyle(ylabel='signal', type='line', color='purple')
 
@@ -25,13 +24,13 @@ def main_multi():
     addplots =[]
 
     addplot_data1 = data["Close"] * 2
-    addplots.append(addplot_factory(additional_plot_data=addplot_data1,
-                                             additional_plot_style='line',
+    addplots.append(additional_plot_factory(additional_plot_data=addplot_data1,
+                                             additional_plot_style=PLOT_STYLE.LINE,
                                              label="Double Close"))
 
     addplot_data2 = data["Close"] * 1.5 
-    addplots.append(addplot_factory(additional_plot_data=addplot_data2,
-                                             additional_plot_style='up_marker',
+    addplots.append(additional_plot_factory(additional_plot_data=addplot_data2,
+                                             additional_plot_style=PLOT_STYLE.UP_MARKER,
                                              label="Double Close"))
 
 

@@ -1,19 +1,20 @@
 
 from abc import ABC
 from dataclasses import dataclass, field
+from enum import Enum
 from typing import Any, Callable, Dict, List, TypeVar
 
 import mplfinance as mpf
 import numpy as np
 import pandas as pd
 
-__all__ = ['additional_plot_factory', 'draw_chart']
+__all__ = ['additional_plot_factory', 'draw_chart', 'PLOT_STYLE']
 
 ###################################
-# related additional plots
+# related to additional plots
 # Used in mplfinance.make_addplot()
 ###################################
-
+    
 @dataclass  
 class PlotStyle(ABC):
     """All attributes are match the dict() paramaters of mplfinance.make_addplot()"""
@@ -45,6 +46,13 @@ class UpMarkerStyle(PlotStyle):
     color: str = 'green'
     marker: str =  '^'
     markersize : int = 50 
+
+
+
+class PLOT_STYLE(Enum):
+    LINE = LineStyle
+    UP_MARKER = UpMarkerStyle
+    DOWN_MARKER = DownMarkerStyle
 
 ###################################
 # Chart with additional plots
@@ -80,21 +88,14 @@ def draw_chart(data: PriceData,
 
 ## Factory method to create draw charts with additional plots
 def additional_plot_factory(additional_plot_data:PriceData, 
-                            additional_plot_style:str, 
+                            additional_plot_style:PLOT_STYLE, 
                             label:str, 
                             additional_plot_creator_fn = __create_additional_plot)-> AdditionalPlotCreator:
     """
     Params
         label :  y_axis label for the additional plot
     """
-
-    additional_plot_styles = {
-        "line":LineStyle,
-        "up_marker" :UpMarkerStyle,
-        "down_marker" :DownMarkerStyle
-        }
-    
-    plot_style = additional_plot_styles[additional_plot_style](ylabel=label)
+    plot_style = additional_plot_style.value(ylabel=label)
     
     return additional_plot_creator_fn((additional_plot_data, plot_style))
     

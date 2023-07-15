@@ -89,7 +89,7 @@ def draw_chart(data: PriceData,
 ## Factory method to create draw charts with additional plots
 def additional_plot_factory(additional_plot_data:PriceData, 
                             additional_plot_style:PLOT_STYLE, 
-                            label:str, 
+                            label:str ="", 
                             additional_plot_creator_fn = __create_additional_plot)-> AdditionalPlotCreator:
     """
     Params

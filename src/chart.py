@@ -82,9 +82,13 @@ def draw_chart(data: PriceData,
         @returnfig = returns the fig instead of plotting/showing the chart 
     """
 
-    fig,_ = mpf.plot(data=data, addplot = addplots, **plot_settings,returnfig=returnfig)
+    if returnfig: 
+        fig,_ = mpf.plot(data=data, addplot = addplots, **plot_settings,returnfig=True)
+        return fig
     
-    return fig
+    else : 
+        mpf.plot(data=data, addplot = addplots, **plot_settings,returnfig=False)
+    
 
 ## Factory method to create draw charts with additional plots
 def additional_plot_factory(additional_plot_data:PriceData, 

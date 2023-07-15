@@ -7,6 +7,8 @@ import mplfinance as mpf
 import numpy as np
 import pandas as pd
 
+__all__ = ['additional_plot_factory', 'draw_chart']
+
 ###################################
 # related additional plots
 # Used in mplfinance.make_addplot()
@@ -54,7 +56,7 @@ PriceData = TypeVar('PriceData', np.ndarray, List, pd.DataFrame)
 
 #structural type addtioan plot creation function
 AdditionalPlotCreator = Callable[[PriceData, PlotStyle], Dict[str, Any]]
-def create_additional_plot(add_plot_input: AdditionalPlotCreator) -> Dict[str, Any]:
+def __create_additional_plot(add_plot_input: AdditionalPlotCreator) -> Dict[str, Any]:
     data, plot_style = add_plot_input
     return mpf.make_addplot(data, **plot_style.__dict__)
 
@@ -77,4 +79,22 @@ def draw_chart(data: PriceData,
     return fig
 
 ## Factory method to create draw charts with additional plots
-# def draw_chart_with_additional_plots(data:
+def additional_plot_factory(additional_plot_data:PriceData, 
+                            additional_plot_style:str, 
+                            label:str, 
+                            additional_plot_creator_fn = __create_additional_plot)-> AdditionalPlotCreator:
+    """
+    Params
+        label :  y_axis label for the additional plot
+    """
+
+    additional_plot_styles = {
+        "line":LineStyle,
+        "up_marker" :UpMarkerStyle,
+        "down_marker" :DownMarkerStyle
+        }
+    
+    plot_style = additional_plot_styles[additional_plot_style](ylabel=label)
+    
+    return additional_plot_creator_fn((additional_plot_data, plot_style))
+    

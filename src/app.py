@@ -16,14 +16,17 @@ def draw_peaks(ticker: str, peak_finder_fn, *peak_finder_fn_args, **peak_finder_
                                              additional_plot_style=PLOT_STYLE.DOWN_MARKER
                                             ))
 
-
-    fig = draw_chart(data, addplots, {'title':f"{ticker} - {peak_finder_fn.__module__}.{peak_finder_fn.__name__}"}, returnfig=False)
-    fig.show()
+    draw_chart(data, 
+                     addplots, 
+                     {'title':f"{ticker} - {peak_finder_fn.__module__}.{peak_finder_fn.__name__}"},
+                    returnfig=False)
+    
 
 
 def main(ticker):
     draw_peaks(ticker=ticker, peak_finder_fn=scipy_signal_find_peaks_cwt, widths=np.arange(1,4), max_distances=np.arange(1,4))
-    
+    draw_peaks(ticker=ticker, peak_finder_fn=scipy_signal_find_peaks_cwt, widths=np.arange(1,4), max_distances=np.arange(1,4))
+   
 
 if __name__ =="__main__":
     main("MSFT")

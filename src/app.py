@@ -1,33 +1,27 @@
-import time
-from functools import cache
+
 
 from chart import PLOT_STYLE, additional_plot_factory, draw_chart
 from data import sample_6M_daily_price
+from lib.scipy_signal_find_peaks_cwt import find_peaks
 
 
-def main():
-    data = sample_6M_daily_price(ticker="AAPL")
-    time.sleep(30)
-
-
+def draw_peaks(ticker: str, peak_finder_fn, *peak_finder_fn_args, **peak_finder_fn_kwargs):
     data = sample_6M_daily_price(ticker="AAPL")
     addplots =[]
 
-    addplot_data1 = data["Close"] * 2
-    addplots.append(additional_plot_factory(additional_plot_data=addplot_data1,
-                                             additional_plot_style=PLOT_STYLE.LINE,
-                                             label="Double Close"))
-
-    addplot_data2 = data["Close"] * 1.5 
-    addplots.append(additional_plot_factory(additional_plot_data=addplot_data2,
-                                             additional_plot_style=PLOT_STYLE.UP_MARKER,
-                                             label="Double Close"))
+    scipy_cwt_peaks = peak_finder_fn(data['High'], *peak_finder_fn_args, **peak_finder_fn_kwargs)
+    addplots.append(additional_plot_factory(additional_plot_data=scipy_cwt_peaks,
+                                             additional_plot_style=PLOT_STYLE.DOWN_MARKER,
+                                             label="scipy_cwt_peaks"))
 
 
-    # line_style = PlotStyle(ylabel='signal', type='line', color='purple')
-
-    fig = draw_chart(data, addplots, {'title':"GRAND CHART"})
+    fig = draw_chart(data, addplots, {'title':f"{ticker} -{peak_finder_fn.__module__}.{peak_finder_fn.__name__}"}, returnfig=False)
     fig.show()
+
+
+def main():
+    draw_peaks(ticker='MSFT', peak_finder_fn=find_peaks, widths=None, max_distances=None)
+    
 
 if __name__ =="__main__":
     # main_single()
